@@ -6,3 +6,6 @@ psycopg2
 python-dotenv
 pre-commit
 seedir
+passlib
+bcrypt
+python-jose
