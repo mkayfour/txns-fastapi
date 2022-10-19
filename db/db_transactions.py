@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from fastapi import HTTPException, status
-
-from db.models import DbTransaction
+from fastapi import HTTPException
+from fastapi import status
 from sqlalchemy.orm.session import Session
 
+from db.models import DbTransaction
 from db.schemas import TransactionBase
 
 
@@ -27,7 +27,9 @@ def create_transaction(db: Session, request: TransactionBase):
 
 
 def delete_transaction(db: Session, id: int):
-    transaction = db.query(DbTransaction).filter(DbTransaction.id == id).first()
+    transaction = (
+        db.query(DbTransaction).filter(DbTransaction.id == id).first()
+    )
 
     if not transaction:
         raise HTTPException(

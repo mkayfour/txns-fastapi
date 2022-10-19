@@ -4,3 +4,5 @@ sqlalchemy
 alembic
 psycopg2
 python-dotenv
+pre-commit
+seedir
