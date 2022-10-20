@@ -58,7 +58,6 @@ class TransactionDisplay(BaseModel):
 
 class TagBase(BaseModel):
     name: str
-    user_id: int
 
     class Config:
         orm_mode = True
@@ -67,8 +66,7 @@ class TagBase(BaseModel):
 class TagDisplay(BaseModel):
     id: str
     name: str
-    user_id: int
-    user: User
+    user: UserDisplay
 
     class Config:
         orm_mode = True
