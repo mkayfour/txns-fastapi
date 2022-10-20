@@ -1,5 +1,4 @@
 from datetime import timedelta
-import re
 from fastapi import APIRouter, Depends, status
 from db.database import get_db
 from sqlalchemy.orm.session import Session

@@ -5,7 +5,8 @@ from fastapi import status
 from sqlalchemy.orm.session import Session
 
 from db.models import DbTransaction, DbUser
-from db.schemas import TransactionBase, UserDisplay
+from db.schemas import TransactionBase, TransactionTypesEnum, UserDisplay
+from fastapi.responses import JSONResponse
 
 
 def get_transactions(db: Session, current_user):
@@ -54,3 +55,36 @@ def delete_transaction(db: Session, txn_id: int, current_user: UserDisplay):
     db.delete(transaction)
     db.commit()
     return "ok"
+
+
+def get_total_amount(db: Session, current_user: UserDisplay):
+    transactions = (
+        db.query(DbTransaction)
+        .filter(DbTransaction.user == current_user)
+        .all()
+    )
+
+    total_debit_amount = 0
+    total_credit_amount = 0
+
+    debit_txns = 0
+    credit_txns = 0
+
+    for values in transactions:
+        if values.transaction_type == TransactionTypesEnum.CREDIT:
+            total_credit_amount += values.amount
+            credit_txns += 1
+        if values.transaction_type == TransactionTypesEnum.DEBIT:
+            total_debit_amount += values.amount
+            debit_txns += 1
+
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+            "total_amount": {
+                "credit": total_credit_amount,
+                "debit": total_debit_amount,
+            },
+            "transactions_count": {"credit": credit_txns, "debit": debit_txns},
+        },
+    )
