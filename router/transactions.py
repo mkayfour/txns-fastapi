@@ -40,4 +40,3 @@ def delete(
     current_user: UserDisplay = Depends(get_current_user),
 ):
     return delete_transaction(db, txn_id, current_user)
-

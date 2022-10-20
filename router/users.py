@@ -9,7 +9,6 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
 
 
-
 from db.db_user import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     authenticate_user,
@@ -32,7 +31,10 @@ def create_new_user(request: User, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=TokenResponse)
-def login_user(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+def login_user(
+    request: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db),
+):
     user = authenticate_user(db, request)
     json_compatible_user = jsonable_encoder(user)
 
