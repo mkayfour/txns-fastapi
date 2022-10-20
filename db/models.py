@@ -26,6 +26,7 @@ class DbTransaction(Base):
     transaction_type = Column(
         Enum(TransactionTypes), nullable=False, default=TransactionTypes.DEBIT
     )
+    name = Column(String, nullable=True, default="Unnamed Transaction")
     amount = Column(Integer, nullable=False)
     timestamp = Column(DateTime, nullable=False)
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)

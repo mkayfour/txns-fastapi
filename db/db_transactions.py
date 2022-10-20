@@ -22,6 +22,7 @@ def create_transaction(
     user = db.query(DbUser).filter(DbUser.email == current_user.email).first()
     new_txn = DbTransaction(
         transaction_type=request.transaction_type,
+        name=request.name,
         amount=request.amount,
         timestamp=datetime.now(),
         user_id=user.id,

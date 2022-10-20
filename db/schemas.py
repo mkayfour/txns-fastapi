@@ -41,6 +41,7 @@ class TransactionTypesEnum(str, Enum):
 
 class TransactionBase(BaseModel):
     transaction_type: TransactionTypesEnum
+    name: str
     amount: int
     timestamp: datetime
 
@@ -48,6 +49,7 @@ class TransactionBase(BaseModel):
 class TransactionDisplay(BaseModel):
     id: int
     transaction_type: TransactionTypesEnum
+    name: str
     amount: int
     timestamp: datetime
     user: UserDisplay
