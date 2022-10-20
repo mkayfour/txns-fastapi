@@ -21,7 +21,12 @@ def create_tag(db: Session, request: TagBase, current_user: User):
 
 
 def delete_tag(db: Session, tag_id: int, current_user: UserDisplay):
-    tag = db.query(DbTag).filter(DbTag.id == tag_id).filter(DbTag.user == current_user).first()
+    tag = (
+        db.query(DbTag)
+        .filter(DbTag.id == tag_id)
+        .filter(DbTag.user == current_user)
+        .first()
+    )
 
     if not tag:
         raise HTTPException(

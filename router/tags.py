@@ -9,7 +9,12 @@ from db.db_tags import create_tag, delete_tag, get_tags
 
 from db.db_transactions import get_transactions
 from db.db_user import get_current_user
-from db.schemas import TagBase, TagDisplay, TransactionDisplay, User, UserDisplay
+from db.schemas import (
+    TagBase,
+    TagDisplay,
+    User,
+    UserDisplay,
+)
 
 
 router = APIRouter(prefix="/tag", tags=["tags"])
@@ -23,7 +28,10 @@ def tags(
     return get_tags(db, current_user)
 
 
-@router.post("", response_model=TagDisplay,)
+@router.post(
+    "",
+    response_model=TagDisplay,
+)
 def create(
     request: TagBase,
     db: Session = Depends(get_db),
