@@ -17,8 +17,9 @@ class User(BaseModel):
 
 
 class UserLogin(BaseModel):
-    email: str
+    email: Optional[str]
     password: str
+    username: Optional[str]
 
     class Config:
         orm_mode = True
@@ -42,7 +43,6 @@ class TransactionBase(BaseModel):
     transaction_type: TransactionTypesEnum
     amount: int
     timestamp: datetime
-    user_id: int
 
 
 class TransactionDisplay(BaseModel):
@@ -50,7 +50,7 @@ class TransactionDisplay(BaseModel):
     transaction_type: TransactionTypesEnum
     amount: int
     timestamp: datetime
-    user: User
+    user: UserDisplay
 
     class Config:
         orm_mode = True

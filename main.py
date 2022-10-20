@@ -9,7 +9,7 @@ from router import transactions
 from router import tags
 from router import users
 
-app = FastAPI()
+app = FastAPI(title="Transactions App")
 
 
 @app.get("/")

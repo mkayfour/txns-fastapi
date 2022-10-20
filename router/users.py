@@ -1,9 +1,13 @@
 from datetime import timedelta
+import re
 from fastapi import APIRouter, Depends, status
 from db.database import get_db
 from sqlalchemy.orm.session import Session
 
 from fastapi.encoders import jsonable_encoder
+
+from fastapi.security import OAuth2PasswordRequestForm
+
 
 
 from db.db_user import (
@@ -28,7 +32,7 @@ def create_new_user(request: User, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=TokenResponse)
-def login_user(request: UserLogin, db: Session = Depends(get_db)):
+def login_user(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = authenticate_user(db, request)
     json_compatible_user = jsonable_encoder(user)
 
