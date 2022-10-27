@@ -77,3 +77,12 @@ class TagDisplay(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str
+
+
+class TransactionTagsDisplay(BaseModel):
+    id: int
+    transaction_id: int
+    tag_id: int
+
+    class Config:
+        orm_mode = True

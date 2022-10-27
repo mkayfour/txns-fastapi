@@ -39,3 +39,12 @@ class DbTag(Base):
     name = Column(String, nullable=False)
     user_id = Column(Integer, ForeignKey("user.id"))
     user = relationship("DbUser", back_populates="tags")
+
+
+class DbTransactionTags(Base):
+    __tablename__ = "transaction_tags"
+    id = Column(Integer, primary_key=True, index=True)
+    transaction_id = Column(
+        Integer, ForeignKey("transaction.id"), nullable=False
+    )
+    tag_id = Column(Integer, ForeignKey("tag.id"), nullable=False)
