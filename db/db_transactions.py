@@ -1,18 +1,26 @@
+# import calendar
 from datetime import datetime
 
 from fastapi import HTTPException
 from fastapi import status
 from sqlalchemy.orm.session import Session
-
+from sqlalchemy import desc, extract
 from db.models import DbTransaction, DbUser
 from db.schemas import TransactionBase, TransactionTypesEnum, UserDisplay
 from fastapi.responses import JSONResponse
 
 
 def get_transactions(db: Session, current_user):
+    # currentMonth = datetime.now().month
+    # currentYear = datetime.now().year
     user = db.query(DbUser).filter(DbUser.email == current_user.email).first()
+
     return (
-        db.query(DbTransaction).filter(DbTransaction.user_id == user.id).all()
+        db.query(DbTransaction)
+        .filter(DbTransaction.user_id == user.id)
+        .filter(extract("year", DbTransaction.timestamp) == 2022)
+        .order_by(desc(DbTransaction.timestamp))
+        .all()
     )
 
 
@@ -32,6 +40,42 @@ def create_transaction(
     db.commit()
     db.refresh(new_txn)
     return new_txn
+
+
+def edit_transaction(
+    db: Session,
+    request: TransactionBase,
+    transaction_id: int,
+    current_user: UserDisplay,
+):
+    user = db.query(DbUser).filter(DbUser.email == current_user.email).first()
+    transaction: DbTransaction = (
+        db.query(DbTransaction)
+        .filter(
+            DbTransaction.id == transaction_id and DbTransaction.user == user
+        )
+        .first()
+    )
+
+    if transaction is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+    updated_txn = DbTransaction(
+        transaction_type=request.transaction_type,
+        name=request.name,
+        amount=request.amount,
+        timestamp=datetime.now(),
+        user_id=user.id,
+    )
+
+    transaction.transaction_type = request.transaction_type
+    transaction.name = request.name
+    transaction.amount = request.amount
+    transaction.timestamp = request.timestamp
+
+    db.commit()
+    db.refresh(updated_txn)
+    return updated_txn
 
 
 def delete_transaction(db: Session, txn_id: int, current_user: UserDisplay):

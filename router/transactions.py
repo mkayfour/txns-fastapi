@@ -5,7 +5,11 @@ from fastapi import Depends
 from sqlalchemy.orm.session import Session
 
 from db.database import get_db
-from db.db_transactions import create_transaction, get_total_amount
+from db.db_transactions import (
+    create_transaction,
+    edit_transaction,
+    get_total_amount,
+)
 from db.db_transactions import delete_transaction
 from db.db_transactions import get_transactions
 from db.db_user import get_current_user
@@ -31,6 +35,16 @@ def create(
     current_user: UserDisplay = Depends(get_current_user),
 ):
     return create_transaction(db, request, current_user)
+
+
+@router.put("/{transaction_id}", response_model=TransactionDisplay)
+def edit(
+    request: TransactionBase,
+    transaction_id: int,
+    db: Session = Depends(get_db),
+    current_user: UserDisplay = Depends(get_current_user),
+):
+    return edit_transaction(db, request, transaction_id, current_user)
 
 
 @router.delete("/{id}")
