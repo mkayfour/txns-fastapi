@@ -1,5 +1,5 @@
 fastapi
-uvicorn
+uvicorn>=0.18.3
 sqlalchemy
 alembic
 psycopg2
