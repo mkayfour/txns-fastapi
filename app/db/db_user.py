@@ -50,7 +50,7 @@ def authenticate_user(db, request: UserLogin):
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with email {request.email} not found",
+            detail=f"User with email {request.username} not found",
         )
 
     if not Hash.verify(user.password, request.password):

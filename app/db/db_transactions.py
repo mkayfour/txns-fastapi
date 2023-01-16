@@ -18,7 +18,7 @@ def get_transactions(db: Session, current_user):
     return (
         db.query(DbTransaction)
         .filter(DbTransaction.user_id == user.id)
-        .filter(extract("year", DbTransaction.timestamp) == 2022)
+        # .filter(extract("year", DbTransaction.timestamp) == 2023)
         .order_by(desc(DbTransaction.timestamp))
         .all()
     )
