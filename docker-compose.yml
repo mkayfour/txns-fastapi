@@ -5,8 +5,6 @@ version: "3.8"
 services:
   web:
     build: .
-    command: uvicorn app.main:app --host 0.0.0.0 --timeout-keep-alive 0 --reload
-
     volumes:
       - .:/app
     expose:
@@ -14,7 +12,7 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ssl.rule=Host(`ssl.dtxns.in`)"
+      - "traefik.http.routers.ssl.rule=Host(`dtxns.in`) && Path('/ssl')"
       - "traefik.http.routers.ssl.tls=true"
       - "traefik.http.routers.ssl.tls.certresolver=letsencrypt"
 
@@ -27,3 +25,8 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "$PWD/app/traefik/traefik.toml:/etc/traefik/traefik.toml"
+      - "./traefik-public-certificates:/certificates"
+
+
+volumes:
+  traefik-public-certificates:
