@@ -6,16 +6,17 @@ services:
   web:
     build: .
     command: uvicorn app.main:app --host 0.0.0.0 --timeout-keep-alive 0 --reload
+
     volumes:
       - .:/app
     expose:
       - "8000"
     restart: always
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.app-http.rule=Host(`ssl.dtxns.in`)
-      - traefik.http.routers.app-http.tls=true
-      - traefik.http.routers.app-http.tls.certresolver=letsencrypt
+      - "traefik.enable=true"
+      - "traefik.http.routers.ssl.rule=Host(`ssl.dtxns.in`)"
+      - "traefik.http.routers.ssl.tls=true"
+      - "traefik.http.routers.ssl.tls.certresolver=letsencrypt"
 
   traefik:
     image: traefik:v2.3

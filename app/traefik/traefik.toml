@@ -18,6 +18,6 @@
 
 [certificatesResolvers.letsencrypt.acme]
   email = "mk4227525@gmail.com"
-  storage= "acme.json"
+  storage= "/certificates/acme.json"
   [certificatesResolvers.letsencrypt.acme.httpChallenge]
     entryPoint = "web"
