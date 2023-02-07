@@ -9,4 +9,24 @@ services:
     volumes:
       - .:/app
     ports:
-      - 8008:8000
+      - 8000:8000
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app-http.rule=Host(`ssl.dtxns.in`)
+      - traefik.http.routers.app-http.tls=true
+      - traefik.http.routers.app-http.tls.certresolver=letsencrypt
+
+  traefik:
+    image: traefik:v2.3
+    ports:
+      - 80:8008
+      - 443:443
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $PWD/app/traefik/traefik.toml:/etc/traefik/traefik.toml
+      - traefik-public-certificates:/certificates
+
+volumes:
+  traefik-public-certificates:
