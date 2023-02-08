@@ -24,7 +24,7 @@ from db.db_user import (
 router = APIRouter(prefix="/user", tags=["user"])
 
 
-@router.post("/", response_model=UserDisplay)
+@router.post("/register", response_model=UserDisplay)
 def create_new_user(request: User, db: Session = Depends(get_db)):
     user = get_user_by_username(db, request.email)
     if user:
