@@ -5,8 +5,26 @@ version: "3.8"
 services:
   web:
     build: .
-    command: uvicorn app.main:app --host 0.0.0.0 --timeout-keep-alive 0 --reload
     volumes:
       - .:/app
     ports:
-      - 8008:8000
+      - "8000:8000"
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ssl.rule=Host(`dtxns.in`) && Path('/ssl')"
+      - "traefik.http.routers.ssl.tls=true"
+      - "traefik.http.routers.ssl.tls.certresolver=letsencrypt"
+
+  traefik:
+    build:
+      context: .
+      dockerfile: ./app/traefik/Dockerfile
+    volumes:
+      - staging_traefik:/etc/traefik/acme
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+
+volumes:
+  staging_traefik:
