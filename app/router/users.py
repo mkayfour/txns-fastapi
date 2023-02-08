@@ -1,11 +1,15 @@
 from datetime import timedelta
 from fastapi import APIRouter, Depends, status
-from db.database import get_db
+from fastapi.exceptions import HTTPException
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
+from fastapi.security import OAuth2PasswordRequestForm
+
 from sqlalchemy.orm.session import Session
 
-from fastapi.encoders import jsonable_encoder
-
-from fastapi.security import OAuth2PasswordRequestForm
+from db.database import get_db
+from db.schemas import TokenResponse, User, UserDisplay, UserLogin
+from app.db.db_user import get_user_by_username
 
 
 from db.db_user import (
@@ -16,16 +20,18 @@ from db.db_user import (
     get_current_user,
 )
 
-from db.schemas import TokenResponse, User, UserDisplay, UserLogin
-
-from fastapi.responses import JSONResponse
-
 
 router = APIRouter(prefix="/user", tags=["user"])
 
 
 @router.post("/", response_model=UserDisplay)
 def create_new_user(request: User, db: Session = Depends(get_db)):
+    user = get_user_by_username(db, request.email)
+    if user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"User with email {request.email} already exists",
+        )
     return create_user(db, request)
 
 
