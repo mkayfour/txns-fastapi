@@ -27,6 +27,15 @@ OnHostRule = true
 
 [file]
 [backends]
-  [backends.django]
-    [backends.django.servers.server1]
-      url = "http://dtxns.in:8000"
+  [backends.web]
+    [backends.web.servers.server1]
+      url = "http://web:8000"
+
+[frontends]
+  [frontends.web]
+    backend = "web"
+    passHostHeader = true
+    [frontends.web.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.web.routes.dr1]
+      rule = "Host:ssl.dtxns.in"
