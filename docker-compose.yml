@@ -17,15 +17,15 @@ services:
       - "traefik.http.routers.ssl.tls.certresolver=letsencrypt"
 
   traefik:
-    image: traefik:v2.3
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: always
+    build:
+      context: .
+      dockerfile: ./app/traefik/Dockerfile
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./traefik-public-certificates:/certificates"
+      - staging_traefik:/etc/traefik/acme
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
 
 
 volumes:
-  traefik-public-certificates:
+  staging_traefik:
