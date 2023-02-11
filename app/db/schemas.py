@@ -46,6 +46,12 @@ class TransactionBase(BaseModel):
     timestamp: datetime
 
 
+class TransactionUpdate(BaseModel):
+    transaction_type: TransactionTypesEnum
+    name: str
+    amount: int
+
+
 class TransactionDisplay(BaseModel):
     id: int
     transaction_type: TransactionTypesEnum

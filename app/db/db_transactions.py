@@ -49,7 +49,11 @@ def edit_transaction(
     current_user: UserDisplay,
 ):
     user = db.query(DbUser).filter(DbUser.email == current_user.email).first()
-    transaction: DbTransaction = (
+
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+    transaction: TransactionBase = (
         db.query(DbTransaction)
         .filter(
             DbTransaction.id == transaction_id and DbTransaction.user == user
@@ -60,22 +64,15 @@ def edit_transaction(
     if transaction is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
-    updated_txn = DbTransaction(
-        transaction_type=request.transaction_type,
-        name=request.name,
-        amount=request.amount,
-        timestamp=datetime.now(),
-        user_id=user.id,
-    )
+    transaction_data = request.dict(exclude_unset=True)
 
-    transaction.transaction_type = request.transaction_type
-    transaction.name = request.name
-    transaction.amount = request.amount
-    transaction.timestamp = request.timestamp
+    for key, value in transaction_data.items():
+        setattr(transaction, key, value)
 
+    db.add(transaction)
     db.commit()
-    db.refresh(updated_txn)
-    return updated_txn
+    db.refresh(transaction)
+    return transaction
 
 
 def delete_transaction(db: Session, txn_id: int, current_user: UserDisplay):

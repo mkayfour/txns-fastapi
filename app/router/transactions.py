@@ -1,4 +1,5 @@
 from typing import List
+from app.db.schemas import TransactionUpdate
 
 from fastapi import APIRouter
 from fastapi import Depends
@@ -39,7 +40,7 @@ def create(
 
 @router.put("/{transaction_id}", response_model=TransactionDisplay)
 def edit(
-    request: TransactionBase,
+    request: TransactionUpdate,
     transaction_id: int,
     db: Session = Depends(get_db),
     current_user: UserDisplay = Depends(get_current_user),
